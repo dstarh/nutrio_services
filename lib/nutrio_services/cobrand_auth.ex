@@ -9,12 +9,9 @@ defmodule NutrioServices.CobrandAuth do
 
   def call(conn, _default) do
     header_content = Plug.Conn.get_req_header(conn, "authorization")
-
-    if conn = header_content |> valid_credentials?(conn) do
-      conn
-    else
-      conn
-      |> send_unauthorized_response
+    case valid_credentials?(header_content, conn) do
+      {:ok, conn} -> conn
+      {:error, conn} -> send_unauthorized_response(conn)
     end
   end
 
@@ -24,13 +21,9 @@ defmodule NutrioServices.CobrandAuth do
     query = from c in Cobrand, where: c.api_key == ^cobrand_api_key
     cobrand = Repo.one(query)
     if nil == cobrand do
-      Logger.debug "got nil for cobrand, returning false"
-      conn
+      {:error, conn}
     else
-      Logger.debug "yay we found a cobrand, putting the cobrand in the conn"
-      Logger.debug cobrand.cobrand_id
-      conn = Plug.Conn.put_private(conn, :cobrand_id, cobrand.cobrand_id)
-      conn
+      {:ok, Plug.Conn.put_private(conn, :cobrand_id, cobrand.cobrand_id)}
     end
   end
 
