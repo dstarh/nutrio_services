@@ -23,7 +23,7 @@ defmodule NutrioServices.CobrandAuth do
     if nil == cobrand do
       {:error, conn}
     else
-      {:ok, Plug.Conn.put_private(conn, :cobrand_id, cobrand.cobrand_id)}
+      {:ok, Plug.Conn.put_private(conn, :cobrand, cobrand)}
     end
   end
 

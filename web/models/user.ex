@@ -5,7 +5,5 @@ defmodule NutrioServices.User do
   @primary_key {:user_id, :integer, []}
   schema "users_demo" do
     field :api_key, :string
-    field :cobrand_id, :integer
-
   end
 end
