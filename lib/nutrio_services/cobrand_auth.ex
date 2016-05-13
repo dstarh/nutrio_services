@@ -10,7 +10,7 @@ defmodule NutrioServices.CobrandAuth do
   def call(conn, _default) do
     header_content = Plug.Conn.get_req_header(conn, "authorization")
 
-    if header_content |> valid_credentials?(conn) do
+    if conn = header_content |> valid_credentials?(conn) do
       conn
     else
       conn
